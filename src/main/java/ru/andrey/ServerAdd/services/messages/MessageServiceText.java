@@ -48,7 +48,7 @@ public class MessageServiceText extends MessageService {
             String[] input = text.split(":");
             String original = input[0];
             String translation = input[1];
-            Card card = new Card(original, translation);
+            Card card = new Card(original, translation, user);
             card.setUser(user);
 
             cardService.save(card);

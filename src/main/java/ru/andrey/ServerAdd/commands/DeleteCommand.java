@@ -5,12 +5,18 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Component
-public class DeleteCommand implements Command{
+public class DeleteCommand implements Command {
     @Override
     public String command() {
-        return null;
+        return "/delete";
+    }
+
+    @Override
+    public String commandReg() {
+        return "^/delete\\s.*?:.*$";
     }
 
     @Override
@@ -26,6 +32,6 @@ public class DeleteCommand implements Command{
     @Override
     public Boolean supports(Update update) {
         if (update.message() == null) return false;
-        return Objects.equals((update.message().text()), command());
+        return Pattern.matches(commandReg(), update.message().text());
     }
 }

@@ -29,9 +29,10 @@ public class Card {
     @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private User user;
 
-    public Card(String original, String translation) {
+    public Card(String original, String translation, User user) {
         this.original = original;
         this.translation = translation;
+        this.user = user;
     }
 
     public void addUser(User user) {
