@@ -1,10 +1,8 @@
 package ru.andrey.ServerAdd.SpeechBoxTelegramBot;
 
 
-import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
-import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Update;
 
 import com.pengrad.telegrambot.request.SendMessage;
@@ -13,10 +11,8 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ru.andrey.ServerAdd.commands.CallBack;
-import ru.andrey.ServerAdd.commands.CallBacks;
-import ru.andrey.ServerAdd.commands.Command;
-import ru.andrey.ServerAdd.commands.Commands;
+import ru.andrey.ServerAdd.executables.callbacks.CallBack;
+import ru.andrey.ServerAdd.executables.commands.Command;
 import ru.andrey.ServerAdd.configuration.Bot;
 
 
@@ -25,14 +21,14 @@ import java.util.List;
 @Component
 public class SpeechBoxTelegramBot implements Bot {
     private final TelegramBot bot;
-    private final Commands commands;
-    private final CallBacks callBacks;
+    private final List<CallBack> callBacks;
+    private final List<Command> commands;
 
     @Autowired
-    public SpeechBoxTelegramBot(TelegramBot bot, Commands commands, CallBacks callBacks) {
+    public SpeechBoxTelegramBot(TelegramBot bot, List<CallBack> callBacks, List<Command> commands) {
         this.bot = bot;
-        this.commands = commands;
         this.callBacks = callBacks;
+        this.commands = commands;
     }
 
 
@@ -52,13 +48,13 @@ public class SpeechBoxTelegramBot implements Bot {
     public int process(List<Update> updates) {
         for (Update update : updates) {
             try {
-                Command command = commands.getCommands().stream().filter(commandI -> commandI.supports(update)).findFirst().orElse(null);
-                CallBack callback = callBacks.getCallBacks().stream().filter(callBackI -> callBackI.supports(update.callbackQuery())).findFirst().orElse(null);
+                Command command = commands.stream().filter(commandI -> commandI.supports(update)).findFirst().orElse(null);
+                CallBack callback = callBacks.stream().filter(callBackI -> callBackI.supports(update.callbackQuery())).findFirst().orElse(null);
 
                 SendMessage sendMessage;
                 if (command != null) sendMessage = command.handle(update);
                 else if (callback != null) sendMessage = callback.handle(update.callbackQuery());
-                else{
+                else {
                     Long chatId = null;
                     if (update.message() != null) chatId = update.message().chat().id();
                     else if (update.callbackQuery() != null) chatId = update.callbackQuery().from().id();

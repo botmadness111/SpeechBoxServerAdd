@@ -27,4 +27,9 @@ public class CardService {
 
         return cardRepository.save(card);
     }
+
+    @Transactional
+    public Card delete(String original, String translation) {
+        return cardRepository.deleteCardByOriginalAndTranslation(original, translation).orElse(null);
+    }
 }

@@ -1,17 +1,15 @@
-package ru.andrey.ServerAdd.commands;
+package ru.andrey.ServerAdd.executables.callbacks;
 
 import com.pengrad.telegrambot.model.CallbackQuery;
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import ru.andrey.ServerAdd.executables.Executable;
 
-import java.util.regex.Pattern;
-
-public interface CallBack {
+public interface CallBack extends Executable {
     String command();
 
     String description();
 
     SendMessage handle(CallbackQuery callbackQuery);
 
-     Boolean supports(CallbackQuery callbackQuery);
+    Boolean supports(CallbackQuery callbackQuery);
 }
