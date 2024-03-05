@@ -7,6 +7,9 @@ import ru.andrey.ServerAdd.model.User;
 import ru.andrey.ServerAdd.repositories.CardRepository;
 import ru.andrey.ServerAdd.repositories.UserRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 public class CardService {
@@ -29,7 +32,17 @@ public class CardService {
     }
 
     @Transactional
-    public Card delete(String original, String translation) {
-        return cardRepository.deleteCardByOriginalAndTranslation(original, translation).orElse(null);
+    public void delete(String original, String translation) {
+        cardRepository.deleteCardByOriginalAndTranslation(original, translation);
+    }
+
+    public Optional<Card> findByOriginalAndTranslation(String original, String translation) {
+        List<Card> cards = cardRepository.findByOriginalAndTranslation(original, translation);
+        if (cards.isEmpty()) return Optional.empty();
+        else return Optional.of(cards.get(0));
+    }
+
+    public List<Card> findAll(){
+        return cardRepository.findAll();
     }
 }

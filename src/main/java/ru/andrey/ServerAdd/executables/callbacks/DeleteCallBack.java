@@ -4,12 +4,11 @@ import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
-import ru.andrey.ServerAdd.executables.OriginalAndTranslation;
+import ru.andrey.ServerAdd.utils.OriginalAndTranslation;
 import ru.andrey.ServerAdd.model.Card;
 import ru.andrey.ServerAdd.services.databases.CardService;
 
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 public class DeleteCallBack implements CallBack {
@@ -46,11 +45,13 @@ public class DeleteCallBack implements CallBack {
         String original = map.get(originalAndTranslation.getKeyOriginal());
         String translation = map.get(originalAndTranslation.getKeyTranslation());
 
-        Card card = cardService.delete(original, translation);
+        boolean isDeleted = cardService.findByOriginalAndTranslation(original, translation).isPresent();
+        cardService.delete(original, translation);
+
 
         String responseText = "card ";
 
-        if (card != null) responseText += card.getOriginal() + " : " + card.getTranslation() + " is deleted";
+        if (isDeleted) responseText += "<" + original + " : " + translation + "> is deleted";
         else responseText += "is deleted already";
 
         return new SendMessage(chatId, responseText);

@@ -1,9 +1,10 @@
-package ru.andrey.ServerAdd.executables;
+package ru.andrey.ServerAdd.utils;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import ru.andrey.ServerAdd.executables.Executable;
 
 import java.util.HashMap;
 import java.util.List;

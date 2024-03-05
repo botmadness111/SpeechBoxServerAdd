@@ -4,8 +4,9 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
-import ru.andrey.ServerAdd.executables.OriginalAndTranslation;
+import ru.andrey.ServerAdd.utils.OriginalAndTranslation;
 import ru.andrey.ServerAdd.model.Card;
 import ru.andrey.ServerAdd.model.User;
 import ru.andrey.ServerAdd.services.databases.CardService;
@@ -60,7 +61,7 @@ public class AddCommand implements Command {
 
         cardService.save(card);
 
-        SendMessage sendMessage = new SendMessage(chatId, description());
+        SendMessage sendMessage = new SendMessage(chatId, "\uD83D\uDCDD" + original + " : " + translation);
 
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(
                 new InlineKeyboardButton[]{

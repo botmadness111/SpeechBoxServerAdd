@@ -1,4 +1,4 @@
-package ru.andrey.ServerAdd;
+package ru.andrey.ServerAdd.utils;
 
 import lombok.Getter;
 import org.springframework.beans.BeansException;
