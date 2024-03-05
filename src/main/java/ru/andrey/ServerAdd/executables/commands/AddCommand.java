@@ -4,15 +4,17 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
-import ru.andrey.ServerAdd.utils.OriginalAndTranslation;
+import ru.andrey.ServerAdd.executables.utils.MyDataBinder;
+import ru.andrey.ServerAdd.executables.utils.OriginalAndTranslation;
 import ru.andrey.ServerAdd.model.Card;
 import ru.andrey.ServerAdd.model.User;
 import ru.andrey.ServerAdd.services.databases.CardService;
 import ru.andrey.ServerAdd.services.databases.UserService;
+import ru.andrey.ServerAdd.validation.CardValidator;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Component
@@ -20,11 +22,13 @@ public class AddCommand implements Command {
     private final CardService cardService;
     private final UserService userService;
     private final OriginalAndTranslation originalAndTranslation;
+    private final CardValidator cardValidator;
 
-    public AddCommand(CardService cardService, UserService userService, OriginalAndTranslation originalAndTranslation) {
+    public AddCommand(CardService cardService, UserService userService, OriginalAndTranslation originalAndTranslation, CardValidator cardValidator) {
         this.cardService = cardService;
         this.userService = userService;
         this.originalAndTranslation = originalAndTranslation;
+        this.cardValidator = cardValidator;
     }
 
     @Override
@@ -58,6 +62,11 @@ public class AddCommand implements Command {
         if (user == null) user = userService.save(new User(chatId.toString(), update.message().chat().username()));
 
         Card card = new Card(original, translation, user);
+
+        MyDataBinder myDataBinder = new MyDataBinder(card, cardValidator);
+        Optional<String> optionalErrors = myDataBinder.findErrors();
+        if (optionalErrors.isPresent()) return new SendMessage(chatId, optionalErrors.get());
+
 
         cardService.save(card);
 

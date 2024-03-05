@@ -1,6 +1,7 @@
 package ru.andrey.ServerAdd.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +21,10 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "original")
+    @Size(min = 1, max = 30, message = "⚠\uFE0Foriginal should be between 1 and 30")
     private String original;
     @Column(name = "translation")
+    @Size(min = 1, max = 30, message = "⚠\uFE0Ftranslation should be between 1 and 30")
     private String translation;
 
     @ManyToOne

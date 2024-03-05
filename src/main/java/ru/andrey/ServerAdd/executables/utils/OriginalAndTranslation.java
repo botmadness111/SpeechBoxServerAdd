@@ -1,4 +1,4 @@
-package ru.andrey.ServerAdd.utils;
+package ru.andrey.ServerAdd.executables.utils;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;

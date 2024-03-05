@@ -1,8 +1,8 @@
-package ru.andrey.ServerAdd.executables;
+package ru.andrey.ServerAdd.executables.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.andrey.ServerAdd.utils.OriginalAndTranslation;
+import ru.andrey.ServerAdd.executables.utils.OriginalAndTranslation;
 
 @Configuration
 public class ExecutableConfiguration {

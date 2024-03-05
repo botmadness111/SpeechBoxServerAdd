@@ -4,8 +4,7 @@ import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
-import ru.andrey.ServerAdd.utils.OriginalAndTranslation;
-import ru.andrey.ServerAdd.model.Card;
+import ru.andrey.ServerAdd.executables.utils.OriginalAndTranslation;
 import ru.andrey.ServerAdd.services.databases.CardService;
 
 import java.util.Map;
