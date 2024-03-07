@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import ru.andrey.ServerAdd.executables.utils.OriginalAndTranslation;
 import ru.andrey.ServerAdd.services.databases.CardService;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -31,7 +33,7 @@ public class DeleteCallBack implements CallBack {
     }
 
     @Override
-    public SendMessage handle(CallbackQuery callbackQuery) {
+    public List<SendMessage> handle(CallbackQuery callbackQuery) {
         //delete from db;
         String text = callbackQuery.data().replace(command(), "");
 
@@ -53,7 +55,7 @@ public class DeleteCallBack implements CallBack {
         if (isDeleted) responseText += "<" + original + " : " + translation + "> is deleted";
         else responseText += "is deleted already";
 
-        return new SendMessage(chatId, responseText);
+        return Collections.singletonList(new SendMessage(chatId, responseText));
     }
 
     @Override

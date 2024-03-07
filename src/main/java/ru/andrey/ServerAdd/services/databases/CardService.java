@@ -36,6 +36,12 @@ public class CardService {
         cardRepository.deleteCardByOriginalAndTranslation(original, translation);
     }
 
+    public Optional<Card> findByOriginalAndTranslationAndCategory(String original, String translation, String category) {
+        List<Card> cards = cardRepository.findByOriginalAndTranslationAndCategory(original, translation, category);
+        if (cards.isEmpty()) return Optional.empty();
+        else return Optional.of(cards.get(0));
+    }
+
     public Optional<Card> findByOriginalAndTranslation(String original, String translation) {
         List<Card> cards = cardRepository.findByOriginalAndTranslation(original, translation);
         if (cards.isEmpty()) return Optional.empty();

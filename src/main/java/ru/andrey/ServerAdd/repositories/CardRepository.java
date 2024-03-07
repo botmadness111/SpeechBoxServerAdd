@@ -12,5 +12,7 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
 
     void deleteCardByOriginalAndTranslation(String original, String translation);
 
+    List<Card> findByOriginalAndTranslationAndCategory(String original, String translation, String category);
+
     List<Card> findByOriginalAndTranslation(String original, String translation);
 }

@@ -21,3 +21,5 @@ select * from tg_user;
 
 
 delete from tg_user val where val.tg_id = '557855647'
+
+alter table card add column category varchar(30) unique

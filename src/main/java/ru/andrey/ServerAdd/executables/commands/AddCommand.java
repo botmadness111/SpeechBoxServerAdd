@@ -1,10 +1,17 @@
 package ru.andrey.ServerAdd.executables.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import ru.andrey.ServerAdd.exceptions.CardErrorException;
+import ru.andrey.ServerAdd.exceptions.CardNotAddException;
+import ru.andrey.ServerAdd.executables.utils.DeleteInlineKeyboardMarkup;
 import ru.andrey.ServerAdd.executables.utils.MyDataBinder;
 import ru.andrey.ServerAdd.executables.utils.OriginalAndTranslation;
 import ru.andrey.ServerAdd.model.Card;
@@ -13,8 +20,7 @@ import ru.andrey.ServerAdd.services.databases.CardService;
 import ru.andrey.ServerAdd.services.databases.UserService;
 import ru.andrey.ServerAdd.validation.CardValidator;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Component
@@ -23,12 +29,14 @@ public class AddCommand implements Command {
     private final UserService userService;
     private final OriginalAndTranslation originalAndTranslation;
     private final CardValidator cardValidator;
+    private final DeleteInlineKeyboardMarkup deleteInlineKeyboardMarkup;
 
-    public AddCommand(CardService cardService, UserService userService, OriginalAndTranslation originalAndTranslation, CardValidator cardValidator) {
+    public AddCommand(CardService cardService, UserService userService, OriginalAndTranslation originalAndTranslation, CardValidator cardValidator, DeleteInlineKeyboardMarkup deleteInlineKeyboardMarkup) {
         this.cardService = cardService;
         this.userService = userService;
         this.originalAndTranslation = originalAndTranslation;
         this.cardValidator = cardValidator;
+        this.deleteInlineKeyboardMarkup = deleteInlineKeyboardMarkup;
     }
 
     @Override
@@ -47,7 +55,7 @@ public class AddCommand implements Command {
     }
 
     @Override
-    public SendMessage handle(Update update) {
+    public List<SendMessage> handle(Update update) {
 
         Long chatId = update.message().chat().id();
         String text = update.message().text();
@@ -65,22 +73,25 @@ public class AddCommand implements Command {
 
         MyDataBinder myDataBinder = new MyDataBinder(card, cardValidator);
         Optional<String> optionalErrors = myDataBinder.findErrors();
-        if (optionalErrors.isPresent()) return new SendMessage(chatId, optionalErrors.get());
+        if (optionalErrors.isPresent()) {
+            throw new CardNotAddException(chatId, optionalErrors.get());
+        }
 
 
         cardService.save(card);
 
-        SendMessage sendMessage = new SendMessage(chatId, "\uD83D\uDCDD" + original + " : " + translation);
+        String textToSend = "✅Карточка добавлена" + "\n\n"
+                + "Оригинал: " + original + "\n"
+                + "Перевод: " + translation + "\n"
+                + "Категория: " + card.getNameCategory();
 
-        InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(
-                new InlineKeyboardButton[]{
-                        new InlineKeyboardButton("❌удалить").callbackData("/delete " + original + " : " + translation),
+        SendMessage sendMessage = new SendMessage(chatId, textToSend);
 
-                });
+        InlineKeyboardMarkup inlineKeyboard = deleteInlineKeyboardMarkup.getDelete(original, translation);
 
         sendMessage.replyMarkup(inlineKeyboard);
 
-        return sendMessage;
+        return Collections.singletonList(sendMessage);
     }
 
     @Override
@@ -88,4 +99,5 @@ public class AddCommand implements Command {
         if (update.message() == null) return false;
         return Pattern.matches(commandReg(), update.message().text());
     }
+
 }
