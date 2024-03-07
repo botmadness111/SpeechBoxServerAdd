@@ -15,5 +15,6 @@ public class SpeechBoxTelegramBotSettings {
     public SpeechBoxTelegramBotSettings(@Value(value = "${SpeechBoxTelegramBot.name}") String name, @Value(value = "${SpeechBoxTelegramBot.token}") String token) {
         this.name = name;
         this.token = token;
+
     }
 }
