@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeleteInlineKeyboardButton {
 
-    public InlineKeyboardButton getDelete(String original, String translation) {
-        return new InlineKeyboardButton("❌удалить").callbackData("/delete " + original + " : " + translation);
+    public InlineKeyboardButton getDelete(Integer cardId) {
+        return new InlineKeyboardButton("❌Удалить").callbackData("/delete " + cardId);
     }
 }

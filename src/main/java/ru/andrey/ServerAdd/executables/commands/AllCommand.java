@@ -51,19 +51,22 @@ public class AllCommand implements Command {
 
     @Override
     public List<SendMessage> handle(Message message) {
-        Long chatId = message.chat().id();
-        String text = message.text();
+        List<SendMessage> listSendMessages = new ArrayList<>();
 
-        User user = userService.findByTelegramId(chatId.toString()).get();
-        user = userService.findByIdWithCards(user.getId());
+        Long chatId = message.chat().id();
+//        String text = message.text();
+
+        User user = userService.findByTelegramIdWithCards(chatId.toString());
         List<Card> cardsRemains = cardService.findByIdGreaterThan(user.getStopId(), user.getId());
 
-        List<SendMessage> listSendMessages = new ArrayList<>();
-        Card card = null;
-        for (int cardI = 0; cardI < cardsRemains.size(); cardI++) {
-            card = cardsRemains.get(cardI);
+        if (cardsRemains.isEmpty()) {
+            userService.setStopId(user, 0);
+            return handle(message);
+        }
 
-            InlineKeyboardButton inlineKeyboardButton1 = deleteInlineKeyboardMarkup.getDelete(card.getOriginal(), card.getTranslation());
+        for (Card card : cardsRemains) {
+
+            InlineKeyboardButton inlineKeyboardButton1 = deleteInlineKeyboardMarkup.getDelete(card.getId());
             InlineKeyboardButton inlineKeyboardButton2 = categoryInlineKeyboardMarkup.getCategory(card.getId());
 
             String sendText = "\uD83D\uDCDAВаша карточка" + "\n\n"
@@ -81,16 +84,11 @@ public class AllCommand implements Command {
 
         }
 
-        if (card == null){
-            userService.setStopId(user, 0);
-            return handle(message);
-        }
-
-        userService.setStopId(user, card.getId());
+        userService.setStopId(user, cardsRemains.get(cardsRemains.size() - 1).getId());
 
         InlineKeyboardMarkup inlineKeyboardMarkup = yesNoInlineKeyboardMarkup.getYesNo(command());
 
-        int remains = user.getCards().size() - cardService.countCardByIdLessThan(card.getId(), user) - 1;
+        int remains = user.getCards().size() - cardService.countCardByIdLessThan(cardsRemains.get(cardsRemains.size() - 1).getId(), user) - 1; // '-1' it is current
 
         if (remains > 0) {
             String sendText = "\uD83D\uDC40 Осталось еще " + remains + " карт" + "\n"

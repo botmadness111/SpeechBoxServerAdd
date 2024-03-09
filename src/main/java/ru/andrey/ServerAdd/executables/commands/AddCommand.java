@@ -63,9 +63,7 @@ public class AddCommand implements Command {
         String original = map.get(originalAndTranslation.getKeyOriginal());
         String translation = map.get(originalAndTranslation.getKeyTranslation());
 
-
-        User user = userService.findByTelegramId(chatId.toString()).orElse(null);
-        if (user == null) user = userService.save(new User(chatId.toString(), message.chat().username()));
+        User user = userService.findByTelegramId(chatId.toString()).get();
 
         Card card = new Card(original, translation, user);
 
@@ -74,7 +72,6 @@ public class AddCommand implements Command {
         if (optionalErrors.isPresent()) {
             throw new CardNotAddException(chatId, optionalErrors.get());
         }
-
 
         cardService.save(card);
 
@@ -87,7 +84,7 @@ public class AddCommand implements Command {
 
         InlineKeyboardMarkup inlineKeyboardMarkup;
 
-        InlineKeyboardButton inlineKeyboardButton1 = deleteInlineKeyboardMarkup.getDelete(original, translation);
+        InlineKeyboardButton inlineKeyboardButton1 = deleteInlineKeyboardMarkup.getDelete(card.getId());
         InlineKeyboardButton inlineKeyboardButton2 = categoryInlineKeyboardButton.getCategory(card.getId());
 
         if (card.getCategory() == null)

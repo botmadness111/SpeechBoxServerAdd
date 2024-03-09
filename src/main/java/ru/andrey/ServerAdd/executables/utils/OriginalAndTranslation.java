@@ -12,9 +12,6 @@ import java.util.Map;
 
 @Component
 public class OriginalAndTranslation {
-    @Autowired
-    @Lazy
-    private List<Executable> executables;
 
     @Getter
     private final String keyOriginal = "original";
@@ -24,16 +21,12 @@ public class OriginalAndTranslation {
     private final HashMap<String, String> map;
 
     public OriginalAndTranslation() {
-        map = new HashMap<>(Map.of("original", "", "translation", ""));
+        map = new HashMap<>(Map.of(keyOriginal, "", keyTranslation, ""));
     }
 
 
     public Map<String, String> getOriginalAndTranslate(String text) {
-        String original = text.split(":")[0].trim();
-        for (Executable executable : executables) {
-            String[] arrString = original.split(executable.command() + " ");
-            if (arrString.length == 2) original = arrString[1].trim();
-        }
+        String original = text.split(":")[0].split("/add")[1].trim();
 
         String translation = text.split(":")[1].trim();
 

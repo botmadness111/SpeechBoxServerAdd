@@ -23,18 +23,23 @@ public class CardValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Card card = (Card) target;
 
-        if (card.getOriginal().length() > 30) {
-            errors.rejectValue("original", "", "⚠\uFE0Foriginal should be between 1 and 30");
+        if (card.getOriginal().length() > 30 || card.getOriginal().isEmpty()) {
+            errors.rejectValue("original", "", "⚠\uFE0F Оригинал должен быть от 1 до 30 символов");
             return;
         }
 
-        if (card.getTranslation().length() > 30) {
-            errors.rejectValue("translation", "", "⚠\uFE0Ftranslation should be between 1 and 30");
+        if (card.getTranslation().length() > 30 || card.getTranslation().isEmpty()) {
+            errors.rejectValue("translation", "", "⚠\uFE0F Перевод должен быть от 1 до 30 символов");
             return;
         }
 
-        if (cardService.findByOriginalAndTranslationAndCategory(card.getOriginal(), card.getTranslation(), card.getCategory(), card.getUser()).isPresent()){
-            errors.rejectValue("original", "", "⚠\uFE0FТакая карточка уже есть");
+        if (card.getNameCategory().length() > 30 || card.getNameCategory().isEmpty()) {
+            errors.rejectValue("category", "", "\uD83D\uDE43 Категория должна быть от 1 до 30 символов");
+            return;
+        }
+
+        if (cardService.findByOriginalAndTranslationAndCategoryAndUser(card.getOriginal(), card.getTranslation(), card.getCategory(), card.getUser()).isPresent()) {
+            errors.rejectValue("original", "", "\uD83D\uDE36\u200D\uD83C\uDF2B\uFE0F Такая карточка уже есть");
             return;
         }
     }

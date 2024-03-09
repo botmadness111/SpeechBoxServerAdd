@@ -32,8 +32,8 @@ public class CardService {
     }
 
     @Transactional
-    public void delete(String original, String translation, User user) {
-        cardRepository.deleteCardByOriginalAndTranslationAndUser(original, translation, user);
+    public void delete(String original, String translation, String category, User user) {
+        cardRepository.deleteCardByOriginalAndTranslationAndCategoryAndUser(original, translation, category, user);
     }
 
     @Transactional
@@ -46,7 +46,7 @@ public class CardService {
         user.setSelectedCardId(null);
     }
 
-    public Optional<Card> findByOriginalAndTranslationAndCategory(String original, String translation, String category, User user) {
+    public Optional<Card> findByOriginalAndTranslationAndCategoryAndUser(String original, String translation, String category, User user) {
         List<Card> cards = cardRepository.findByOriginalAndTranslationAndCategoryAndUser(original, translation, category, user);
         if (cards.isEmpty()) return Optional.empty();
         else return Optional.of(cards.get(0));

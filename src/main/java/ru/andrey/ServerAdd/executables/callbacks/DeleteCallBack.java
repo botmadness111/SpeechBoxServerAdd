@@ -4,7 +4,9 @@ import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
+import ru.andrey.ServerAdd.exceptions.CardNotRegistered;
 import ru.andrey.ServerAdd.executables.utils.OriginalAndTranslation;
+import ru.andrey.ServerAdd.model.Card;
 import ru.andrey.ServerAdd.model.User;
 import ru.andrey.ServerAdd.services.databases.CardService;
 import ru.andrey.ServerAdd.services.databases.UserService;
@@ -15,13 +17,11 @@ import java.util.Map;
 
 @Component
 public class DeleteCallBack implements CallBack {
-    private final OriginalAndTranslation originalAndTranslation;
     private final UserService userService;
 
     private final CardService cardService;
 
-    public DeleteCallBack(OriginalAndTranslation originalAndTranslation, UserService userService, CardService cardService) {
-        this.originalAndTranslation = originalAndTranslation;
+    public DeleteCallBack(UserService userService, CardService cardService) {
         this.userService = userService;
         this.cardService = cardService;
     }
@@ -39,26 +39,26 @@ public class DeleteCallBack implements CallBack {
     @Override
     public List<SendMessage> handle(CallbackQuery callbackQuery) {
         //delete from db;
-        String text = callbackQuery.data().replace(command(), "");
 
         Message message = callbackQuery.message();
 
         Long chatId = message.chat().id();
 
-        Map<String, String> map = originalAndTranslation.getOriginalAndTranslate(text);
 
-        String original = map.get(originalAndTranslation.getKeyOriginal());
-        String translation = map.get(originalAndTranslation.getKeyTranslation());
+        int cardId = Integer.parseInt(callbackQuery.data().split(" ")[1]);
+        Card card = cardService.findById(cardId).orElseThrow(() -> new CardNotRegistered(chatId, cardId));
+
         User user = userService.findByTelegramId(chatId.toString()).get();
 
-        boolean isDeleted = cardService.findByOriginalAndTranslation(original, translation, user).isPresent();
-        cardService.delete(original, translation, user);
+        String original = card.getOriginal();
+        String translation = card.getTranslation();
+        String category = card.getCategory();
 
+        cardService.delete(original, translation, category, user);
 
-        String responseText = "card ";
+        String responseText = "";
 
-        if (isDeleted) responseText += "<" + original + " : " + translation + "> is deleted";
-        else responseText += "is deleted already";
+        responseText += "\uD83D\uDE0C Карта удалена";
 
         return Collections.singletonList(new SendMessage(chatId, responseText));
     }

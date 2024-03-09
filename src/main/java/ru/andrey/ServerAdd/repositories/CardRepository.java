@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface CardRepository extends JpaRepository<Card, Integer> {
 
-    void deleteCardByOriginalAndTranslationAndUser(String original, String translation, User user);
+    void deleteCardByOriginalAndTranslationAndCategoryAndUser(String original, String translation, String category, User user);
 
     List<Card> findByOriginalAndTranslationAndCategoryAndUser(String original, String translation, String category, User user);
 

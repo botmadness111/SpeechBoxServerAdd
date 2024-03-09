@@ -35,11 +35,18 @@ public class UserService {
     }
 
     public User findByIdWithCards(Integer userId) {
-        User userFind = userRepository.findById(userId).orElse(null);
+        User userFind = userRepository.findById(userId).get();
 
-        if (userFind != null) {
-            Hibernate.initialize(userFind.getCards());
-        }
+        Hibernate.initialize(userFind.getCards());
+
+        return userFind;
+
+    }
+
+    public User findByTelegramIdWithCards(String tg_id) {
+        User userFind = userRepository.findByTelegramId(tg_id).get();
+
+        Hibernate.initialize(userFind.getCards());
 
         return userFind;
 
