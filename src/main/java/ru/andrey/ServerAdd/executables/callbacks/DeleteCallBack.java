@@ -52,7 +52,7 @@ public class DeleteCallBack implements CallBack {
         User user = userService.findByTelegramId(chatId.toString()).get();
 
         boolean isDeleted = cardService.findByOriginalAndTranslation(original, translation, user).isPresent();
-        cardService.delete(original, translation);
+        cardService.delete(original, translation, user);
 
 
         String responseText = "card ";

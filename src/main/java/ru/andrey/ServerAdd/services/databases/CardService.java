@@ -32,8 +32,8 @@ public class CardService {
     }
 
     @Transactional
-    public void delete(String original, String translation) {
-        cardRepository.deleteCardByOriginalAndTranslation(original, translation);
+    public void delete(String original, String translation, User user) {
+        cardRepository.deleteCardByOriginalAndTranslationAndUser(original, translation, user);
     }
 
     @Transactional
@@ -58,8 +58,8 @@ public class CardService {
         else return Optional.of(cards.get(0));
     }
 
-    public List<Card> findAll() {
-        return cardRepository.findAll();
+    public List<Card> findAll(User user) {
+        return cardRepository.findAllByUser(user);
     }
 
     public List<Card> findByIdGreaterThan(Integer value, int userId) {
@@ -70,11 +70,11 @@ public class CardService {
         return cardRepository.findById(id);
     }
 
-    public Integer findCardWithMaxId() {
-        return cardRepository.findCardWithMaxId();
+    public Integer findCardWithMaxId(int userId) {
+        return cardRepository.findCardWithMaxId(userId);
     }
 
-    public Integer countCardByIdLessThan(int id){
-        return cardRepository.countCardByIdLessThan(id);
+    public Integer countCardByIdLessThan(int id, User user){
+        return cardRepository.countCardByIdLessThanAndUser(id, user);
     }
 }

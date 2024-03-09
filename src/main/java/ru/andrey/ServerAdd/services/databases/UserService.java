@@ -48,7 +48,7 @@ public class UserService {
     @Transactional
     public void setStopId(User user, Integer value) {
         user = findByTelegramId(user.getTelegramId()).get();
-        user.setStopId(value >= cardService.findCardWithMaxId() ? 0 : value);
+        user.setStopId(value >= cardService.findCardWithMaxId(user.getId()) ? 0 : value);
         userRepository.save(user);
     }
 

@@ -14,6 +14,7 @@ import ru.andrey.ServerAdd.services.databases.CardService;
 import ru.andrey.ServerAdd.services.databases.UserService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -80,11 +81,16 @@ public class AllCommand implements Command {
 
         }
 
+        if (card == null){
+            userService.setStopId(user, 0);
+            return handle(message);
+        }
+
         userService.setStopId(user, card.getId());
 
         InlineKeyboardMarkup inlineKeyboardMarkup = yesNoInlineKeyboardMarkup.getYesNo(command());
 
-        int remains = user.getCards().size() - cardService.countCardByIdLessThan(card.getId()) - 1;
+        int remains = user.getCards().size() - cardService.countCardByIdLessThan(card.getId(), user) - 1;
 
         if (remains > 0) {
             String sendText = "\uD83D\uDC40 Осталось еще " + remains + " карт" + "\n"
