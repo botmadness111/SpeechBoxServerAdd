@@ -36,6 +36,16 @@ public class CardService {
         cardRepository.deleteCardByOriginalAndTranslation(original, translation);
     }
 
+    @Transactional
+    public void setCategory(Card card, String category) {
+        card = findById(card.getId()).get();
+        card.setCategory(category);
+        save(card);
+
+        User user = userRepository.findById(card.getUser().getId()).get();
+        user.setSelectedCardId(null);
+    }
+
     public Optional<Card> findByOriginalAndTranslationAndCategory(String original, String translation, String category) {
         List<Card> cards = cardRepository.findByOriginalAndTranslationAndCategory(original, translation, category);
         if (cards.isEmpty()) return Optional.empty();
@@ -48,7 +58,15 @@ public class CardService {
         else return Optional.of(cards.get(0));
     }
 
-    public List<Card> findAll(){
+    public List<Card> findAll() {
         return cardRepository.findAll();
+    }
+
+    public List<Card> findByIdGreaterThan(Integer value) {
+        return cardRepository.findByIdGreaterThan(value);
+    }
+
+    public Optional<Card> findById(int id) {
+        return cardRepository.findById(id);
     }
 }

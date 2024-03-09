@@ -17,9 +17,10 @@ alter table tg_user add column tg_id varchar not null unique;
 
 alter table card alter column id type int;
 
-select * from tg_user;
-
-
-delete from tg_user val where val.tg_id = '557855647'
-
 alter table card add column category varchar(30) unique
+
+alter table tg_user add column remainsCards int default 0;
+
+alter table tg_user rename column remainsCards to stopId;
+
+alter table tg_user add column selectedCardId int default null;

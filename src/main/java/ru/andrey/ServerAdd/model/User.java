@@ -25,6 +25,12 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "stopid")
+    private Integer stopId;
+
+    @Column(name = "selectedcardid")
+    private Integer selectedCardId;
+
     @OneToMany(mappedBy = "user")
     private List<Card> cards = new ArrayList<>();
 

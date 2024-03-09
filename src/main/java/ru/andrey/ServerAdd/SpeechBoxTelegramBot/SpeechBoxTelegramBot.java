@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import ru.andrey.ServerAdd.exceptions.CardErrorException;
 import ru.andrey.ServerAdd.executables.callbacks.CallBack;
-import ru.andrey.ServerAdd.executables.commands.ClarifyCommand;
 import ru.andrey.ServerAdd.executables.commands.Command;
 import ru.andrey.ServerAdd.configuration.Bot;
 
@@ -27,14 +26,12 @@ public class SpeechBoxTelegramBot implements Bot {
     private final TelegramBot bot;
     private final List<CallBack> callBacks;
     private final List<Command> commands;
-    private final ClarifyCommand clarifyCommand;
 
     @Autowired
-    public SpeechBoxTelegramBot(TelegramBot bot, List<CallBack> callBacks, List<Command> commands, ClarifyCommand clarifyCommand) {
+    public SpeechBoxTelegramBot(TelegramBot bot, List<CallBack> callBacks, List<Command> commands) {
         this.bot = bot;
         this.callBacks = callBacks;
         this.commands = commands;
-        this.clarifyCommand = clarifyCommand;
     }
 
 
@@ -55,11 +52,15 @@ public class SpeechBoxTelegramBot implements Bot {
 
         for (Update update : updates) {
             try {
-                Command command = commands.stream().filter(commandI -> commandI.supports(update)).findFirst().orElse(null);
-                CallBack callback = callBacks.stream().filter(callBackI -> callBackI.supports(update.callbackQuery())).findFirst().orElse(null);
+                Command command = null;
+                CallBack callback = null;
+                if (update.message() != null)
+                    command = commands.stream().filter(commandI -> commandI.supports(update.message().text())).findFirst().orElse(null);
+                if (update.callbackQuery() != null)
+                    callback = callBacks.stream().filter(callBackI -> callBackI.supports(update.callbackQuery().data())).findFirst().orElse(null);
 
                 List<SendMessage> listSendMessage;
-                if (command != null) listSendMessage = command.handle(update);
+                if (command != null) listSendMessage = command.handle(update.message());
                 else if (callback != null) listSendMessage = callback.handle(update.callbackQuery());
                 else {
                     Long chatId = null;
@@ -68,17 +69,10 @@ public class SpeechBoxTelegramBot implements Bot {
                     listSendMessage = Collections.singletonList(new SendMessage(chatId, "error command"));
                 }
 
-//                int cntSend = 0;
                 for (SendMessage sendMessage : listSendMessage) {
-//                    if (++cntSend == 7) {
-//                        SendMessage clarifyMessage = clarifyCommand.getClarifySendMessage(update.message().chat().id(), listSendMessage.size() - cntSend);
-//
-//                        bot.execute(clarifyMessage);
-//
-//                        cntSend = 0;
-//                    }
                     bot.execute(sendMessage);
                 }
+
             } catch (NullPointerException e) {
                 System.out.println(e.getMessage());
                 continue;

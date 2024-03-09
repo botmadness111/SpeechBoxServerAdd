@@ -59,8 +59,7 @@ public class DeleteCallBack implements CallBack {
     }
 
     @Override
-    public Boolean supports(CallbackQuery callbackQuery) {
-        if (callbackQuery == null || callbackQuery.data() == null) return false;
-        return callbackQuery.data().contains(command());
+    public Boolean supports(String nameCallBack) {
+        return nameCallBack.contains(command());
     }
 }

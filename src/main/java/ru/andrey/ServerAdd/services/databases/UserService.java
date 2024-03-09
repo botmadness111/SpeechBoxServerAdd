@@ -14,12 +14,14 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
-    private final UserDAO userDAO;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserDAO userDAO) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userDAO = userDAO;
+    }
+
+    public Optional<User> findById(int id) {
+        return userRepository.findById(id);
     }
 
     @Transactional
@@ -40,5 +42,19 @@ public class UserService {
 
         return userFind;
 
+    }
+
+    @Transactional
+    public void setStopId(User user, Integer value) {
+        user = findByTelegramId(user.getTelegramId()).get();
+        user.setStopId(value >= user.getCards().size() ? 0 : value);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void setSelectedCardId(User user, int id) {
+        user = findByTelegramId(user.getTelegramId()).get();
+        user.setSelectedCardId(id);
+        userRepository.save(user);
     }
 }

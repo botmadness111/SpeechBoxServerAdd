@@ -1,17 +1,12 @@
 package ru.andrey.ServerAdd.executables.commands;
 
-import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.andrey.ServerAdd.exceptions.CardErrorException;
 import ru.andrey.ServerAdd.exceptions.CardNotAddException;
-import ru.andrey.ServerAdd.executables.utils.DeleteInlineKeyboardMarkup;
+import ru.andrey.ServerAdd.executables.utils.DeleteInlineKeyboardButton;
 import ru.andrey.ServerAdd.executables.utils.MyDataBinder;
 import ru.andrey.ServerAdd.executables.utils.OriginalAndTranslation;
 import ru.andrey.ServerAdd.model.Card;
@@ -29,9 +24,9 @@ public class AddCommand implements Command {
     private final UserService userService;
     private final OriginalAndTranslation originalAndTranslation;
     private final CardValidator cardValidator;
-    private final DeleteInlineKeyboardMarkup deleteInlineKeyboardMarkup;
+    private final DeleteInlineKeyboardButton deleteInlineKeyboardMarkup;
 
-    public AddCommand(CardService cardService, UserService userService, OriginalAndTranslation originalAndTranslation, CardValidator cardValidator, DeleteInlineKeyboardMarkup deleteInlineKeyboardMarkup) {
+    public AddCommand(CardService cardService, UserService userService, OriginalAndTranslation originalAndTranslation, CardValidator cardValidator, DeleteInlineKeyboardButton deleteInlineKeyboardMarkup) {
         this.cardService = cardService;
         this.userService = userService;
         this.originalAndTranslation = originalAndTranslation;
@@ -55,10 +50,10 @@ public class AddCommand implements Command {
     }
 
     @Override
-    public List<SendMessage> handle(Update update) {
+    public List<SendMessage> handle(Message message) {
 
-        Long chatId = update.message().chat().id();
-        String text = update.message().text();
+        Long chatId = message.chat().id();
+        String text = message.text();
 
         Map<String, String> map = originalAndTranslation.getOriginalAndTranslate(text);
 
@@ -67,7 +62,7 @@ public class AddCommand implements Command {
 
 
         User user = userService.findByTelegramId(chatId.toString()).orElse(null);
-        if (user == null) user = userService.save(new User(chatId.toString(), update.message().chat().username()));
+        if (user == null) user = userService.save(new User(chatId.toString(), message.chat().username()));
 
         Card card = new Card(original, translation, user);
 
@@ -87,17 +82,16 @@ public class AddCommand implements Command {
 
         SendMessage sendMessage = new SendMessage(chatId, textToSend);
 
-        InlineKeyboardMarkup inlineKeyboard = deleteInlineKeyboardMarkup.getDelete(original, translation);
+        InlineKeyboardButton inlineKeyboardButton = deleteInlineKeyboardMarkup.getDelete(original, translation);
 
-        sendMessage.replyMarkup(inlineKeyboard);
+        sendMessage.replyMarkup(new InlineKeyboardMarkup(inlineKeyboardButton));
 
         return Collections.singletonList(sendMessage);
     }
 
     @Override
-    public Boolean supports(Update update) {
-        if (update.message() == null) return false;
-        return Pattern.matches(commandReg(), update.message().text());
+    public Boolean supports(String commandName) {
+        return Pattern.matches(commandReg(), commandName);
     }
 
 }

@@ -10,5 +10,5 @@ public interface CallBack extends Executable {
 
     List<SendMessage> handle(CallbackQuery callbackQuery);
 
-    Boolean supports(CallbackQuery callbackQuery);
+    Boolean supports(String nameCallBack);
 }

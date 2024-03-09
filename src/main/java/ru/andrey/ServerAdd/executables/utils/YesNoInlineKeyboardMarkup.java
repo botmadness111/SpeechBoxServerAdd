@@ -5,11 +5,12 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeleteInlineKeyboardMarkup {
-    public InlineKeyboardMarkup getDelete(String original, String translation) {
+public class YesNoInlineKeyboardMarkup {
+    public InlineKeyboardMarkup getYesNo(String commandName) {
         return new InlineKeyboardMarkup(
                 new InlineKeyboardButton[]{
-                        new InlineKeyboardButton("❌удалить").callbackData("/delete " + original + " : " + translation),
+                        new InlineKeyboardButton("✅Yes").callbackData("/repeat " + commandName),
+                        new InlineKeyboardButton("❌No").callbackData("/end"),
 
                 });
     }
