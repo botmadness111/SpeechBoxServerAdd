@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
 import ru.andrey.ServerAdd.exceptions.CardNotAddException;
+import ru.andrey.ServerAdd.executables.utils.CategoryInlineKeyboardButton;
 import ru.andrey.ServerAdd.executables.utils.DeleteInlineKeyboardButton;
 import ru.andrey.ServerAdd.executables.utils.MyDataBinder;
 import ru.andrey.ServerAdd.executables.utils.OriginalAndTranslation;
@@ -25,13 +26,15 @@ public class AddCommand implements Command {
     private final OriginalAndTranslation originalAndTranslation;
     private final CardValidator cardValidator;
     private final DeleteInlineKeyboardButton deleteInlineKeyboardMarkup;
+    private final CategoryInlineKeyboardButton categoryInlineKeyboardButton;
 
-    public AddCommand(CardService cardService, UserService userService, OriginalAndTranslation originalAndTranslation, CardValidator cardValidator, DeleteInlineKeyboardButton deleteInlineKeyboardMarkup) {
+    public AddCommand(CardService cardService, UserService userService, OriginalAndTranslation originalAndTranslation, CardValidator cardValidator, DeleteInlineKeyboardButton deleteInlineKeyboardMarkup, CategoryInlineKeyboardButton categoryInlineKeyboardButton) {
         this.cardService = cardService;
         this.userService = userService;
         this.originalAndTranslation = originalAndTranslation;
         this.cardValidator = cardValidator;
         this.deleteInlineKeyboardMarkup = deleteInlineKeyboardMarkup;
+        this.categoryInlineKeyboardButton = categoryInlineKeyboardButton;
     }
 
     @Override
@@ -82,9 +85,18 @@ public class AddCommand implements Command {
 
         SendMessage sendMessage = new SendMessage(chatId, textToSend);
 
-        InlineKeyboardButton inlineKeyboardButton = deleteInlineKeyboardMarkup.getDelete(original, translation);
+        InlineKeyboardMarkup inlineKeyboardMarkup;
 
-        sendMessage.replyMarkup(new InlineKeyboardMarkup(inlineKeyboardButton));
+        InlineKeyboardButton inlineKeyboardButton1 = deleteInlineKeyboardMarkup.getDelete(original, translation);
+        InlineKeyboardButton inlineKeyboardButton2 = categoryInlineKeyboardButton.getCategory(card.getId());
+
+        if (card.getCategory() == null)
+            inlineKeyboardMarkup = new InlineKeyboardMarkup(new InlineKeyboardButton[]{inlineKeyboardButton2}, new InlineKeyboardButton[]{inlineKeyboardButton1});
+        else
+            inlineKeyboardMarkup = new InlineKeyboardMarkup(new InlineKeyboardButton[]{inlineKeyboardButton1});
+
+
+        sendMessage.replyMarkup(inlineKeyboardMarkup);
 
         return Collections.singletonList(sendMessage);
     }

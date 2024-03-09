@@ -33,7 +33,7 @@ public class CardValidator implements Validator {
             return;
         }
 
-        if (cardService.findByOriginalAndTranslationAndCategory(card.getOriginal(), card.getTranslation(), card.getCategory()).isPresent()){
+        if (cardService.findByOriginalAndTranslationAndCategory(card.getOriginal(), card.getTranslation(), card.getCategory(), card.getUser()).isPresent()){
             errors.rejectValue("original", "", "⚠\uFE0FТакая карточка уже есть");
             return;
         }

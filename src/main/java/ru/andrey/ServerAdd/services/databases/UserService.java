@@ -4,7 +4,6 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.andrey.ServerAdd.dao.UserDAO;
 import ru.andrey.ServerAdd.model.User;
 import ru.andrey.ServerAdd.repositories.UserRepository;
 
@@ -14,10 +13,12 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final CardService cardService;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, CardService cardService) {
         this.userRepository = userRepository;
+        this.cardService = cardService;
     }
 
     public Optional<User> findById(int id) {
@@ -47,7 +48,7 @@ public class UserService {
     @Transactional
     public void setStopId(User user, Integer value) {
         user = findByTelegramId(user.getTelegramId()).get();
-        user.setStopId(value >= user.getCards().size() ? 0 : value);
+        user.setStopId(value >= cardService.findCardWithMaxId() ? 0 : value);
         userRepository.save(user);
     }
 

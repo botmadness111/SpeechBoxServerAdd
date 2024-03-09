@@ -54,24 +54,13 @@ public class AllCommand implements Command {
         String text = message.text();
 
         User user = userService.findByTelegramId(chatId.toString()).get();
-        List<Card> cardsRemains = cardService.findByIdGreaterThan(user.getStopId());
+        user = userService.findByIdWithCards(user.getId());
+        List<Card> cardsRemains = cardService.findByIdGreaterThan(user.getStopId(), user.getId());
 
         List<SendMessage> listSendMessages = new ArrayList<>();
-        Integer startPoint = user.getStopId();
-        for (int cardI = startPoint; cardI < cardsRemains.size(); cardI++) {
-            Card card = cardsRemains.get(cardI);
-            if (cardI != startPoint && cardI % 5 == 0) {
-                InlineKeyboardMarkup inlineKeyboardMarkup = yesNoInlineKeyboardMarkup.getYesNo(command());
-
-
-                String sendText = "\uD83D\uDC40Осталось еще " + (cardsRemains.size() - cardI) + " карт" + "\n"
-                        + "\uD83E\uDD13Загрузить их?";
-
-                listSendMessages.add(new SendMessage(chatId, sendText).replyMarkup(inlineKeyboardMarkup));
-
-                userService.setStopId(user, cardI);
-                return listSendMessages;
-            }
+        Card card = null;
+        for (int cardI = 0; cardI < cardsRemains.size(); cardI++) {
+            card = cardsRemains.get(cardI);
 
             InlineKeyboardButton inlineKeyboardButton1 = deleteInlineKeyboardMarkup.getDelete(card.getOriginal(), card.getTranslation());
             InlineKeyboardButton inlineKeyboardButton2 = categoryInlineKeyboardMarkup.getCategory(card.getId());
@@ -88,9 +77,23 @@ public class AllCommand implements Command {
                 inlineKeyboardMarkup = new InlineKeyboardMarkup(new InlineKeyboardButton[][]{new InlineKeyboardButton[]{inlineKeyboardButton1}});
 
             listSendMessages.add(new SendMessage(chatId, sendText).replyMarkup(inlineKeyboardMarkup));
+
         }
 
-        userService.setStopId(user, 0);
+        userService.setStopId(user, card.getId());
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = yesNoInlineKeyboardMarkup.getYesNo(command());
+
+        int remains = user.getCards().size() - cardService.countCardByIdLessThan(card.getId()) - 1;
+
+        if (remains > 0) {
+            String sendText = "\uD83D\uDC40 Осталось еще " + remains + " карт" + "\n"
+                    + "\uD83E\uDD13 Загрузить их?";
+
+            listSendMessages.add(new SendMessage(chatId, sendText).replyMarkup(inlineKeyboardMarkup));
+        }
+
+
         return listSendMessages;
     }
 

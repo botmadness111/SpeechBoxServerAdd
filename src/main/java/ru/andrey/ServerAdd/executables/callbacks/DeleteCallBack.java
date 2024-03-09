@@ -5,7 +5,9 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
 import ru.andrey.ServerAdd.executables.utils.OriginalAndTranslation;
+import ru.andrey.ServerAdd.model.User;
 import ru.andrey.ServerAdd.services.databases.CardService;
+import ru.andrey.ServerAdd.services.databases.UserService;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,11 +16,13 @@ import java.util.Map;
 @Component
 public class DeleteCallBack implements CallBack {
     private final OriginalAndTranslation originalAndTranslation;
+    private final UserService userService;
 
     private final CardService cardService;
 
-    public DeleteCallBack(OriginalAndTranslation originalAndTranslation, CardService cardService) {
+    public DeleteCallBack(OriginalAndTranslation originalAndTranslation, UserService userService, CardService cardService) {
         this.originalAndTranslation = originalAndTranslation;
+        this.userService = userService;
         this.cardService = cardService;
     }
 
@@ -45,8 +49,9 @@ public class DeleteCallBack implements CallBack {
 
         String original = map.get(originalAndTranslation.getKeyOriginal());
         String translation = map.get(originalAndTranslation.getKeyTranslation());
+        User user = userService.findByTelegramId(chatId.toString()).get();
 
-        boolean isDeleted = cardService.findByOriginalAndTranslation(original, translation).isPresent();
+        boolean isDeleted = cardService.findByOriginalAndTranslation(original, translation, user).isPresent();
         cardService.delete(original, translation);
 
 
