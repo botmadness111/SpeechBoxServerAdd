@@ -26,10 +26,10 @@ public class User {
     private String username;
 
     @Column(name = "stopid")
-    private Integer stopId;
+    private Integer stopId = 0;
 
     @Column(name = "selectedcardid")
-    private Integer selectedCardId;
+    private Integer selectedCardId = 0;
 
     @OneToMany(mappedBy = "user")
     private List<Card> cards = new ArrayList<>();

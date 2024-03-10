@@ -49,7 +49,7 @@ public class AddCommand implements Command {
 
     @Override
     public String description() {
-        return "sends : <rus text : eng text>";
+        return "Так вы можете создать карточку" + "\n" + "Введите /add оригинал:перевод";
     }
 
     @Override

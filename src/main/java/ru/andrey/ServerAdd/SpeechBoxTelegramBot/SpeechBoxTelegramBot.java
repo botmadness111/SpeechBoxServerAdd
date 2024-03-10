@@ -66,7 +66,7 @@ public class SpeechBoxTelegramBot implements Bot {
                     Long chatId = null;
                     if (update.message() != null) chatId = update.message().chat().id();
                     else if (update.callbackQuery() != null) chatId = update.callbackQuery().from().id();
-                    listSendMessage = Collections.singletonList(new SendMessage(chatId, "error command"));
+                    listSendMessage = Collections.singletonList(new SendMessage(chatId, "\uD83D\uDE35\u200D\uD83D\uDCAB error command"));
                 }
 
                 for (SendMessage sendMessage : listSendMessage) {

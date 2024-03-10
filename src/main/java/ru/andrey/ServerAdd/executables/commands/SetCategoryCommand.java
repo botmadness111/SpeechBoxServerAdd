@@ -38,7 +38,7 @@ public class SetCategoryCommand implements Command {
 
     @Override
     public String description() {
-        return "set category to card";
+        return "Устанавливает категорию к карточке" + "\n" + "Введите /category название категории";
     }
 
     @Override
@@ -63,7 +63,7 @@ public class SetCategoryCommand implements Command {
 
         MyDataBinder myDataBinder = new MyDataBinder(card, cardValidator);
         Optional<String> optionalErrors = myDataBinder.findErrors();
-        if (optionalErrors.isPresent()){
+        if (optionalErrors.isPresent()) {
             throw new CardNotAddException(chatId, optionalErrors.get());
         }
 

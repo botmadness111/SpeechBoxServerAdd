@@ -46,7 +46,7 @@ public class AllCommand implements Command {
 
     @Override
     public String description() {
-        return "send all cards";
+        return "Выводит все ваши карточки" + "\n" + "Введите /all";
     }
 
     @Override
@@ -58,6 +58,10 @@ public class AllCommand implements Command {
 
         User user = userService.findByTelegramIdWithCards(chatId.toString());
         List<Card> cardsRemains = cardService.findByIdGreaterThan(user.getStopId(), user.getId());
+
+        if (cardsRemains.isEmpty() && user.getStopId() == 0) {
+            return Collections.singletonList(new SendMessage(chatId, "\uD83D\uDE44 У вас нет ни одной карточки"));
+        }
 
         if (cardsRemains.isEmpty()) {
             userService.setStopId(user, 0);
@@ -74,11 +78,7 @@ public class AllCommand implements Command {
                     + "Перевод: " + card.getTranslation() + "\n"
                     + "Категория: " + card.getNameCategory();
 
-            InlineKeyboardMarkup inlineKeyboardMarkup;
-            if (card.getCategory() == null)
-                inlineKeyboardMarkup = new InlineKeyboardMarkup(new InlineKeyboardButton[][]{new InlineKeyboardButton[]{inlineKeyboardButton2}, new InlineKeyboardButton[]{inlineKeyboardButton1}});
-            else
-                inlineKeyboardMarkup = new InlineKeyboardMarkup(new InlineKeyboardButton[][]{new InlineKeyboardButton[]{inlineKeyboardButton1}});
+            InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(new InlineKeyboardButton[][]{new InlineKeyboardButton[]{inlineKeyboardButton2}, new InlineKeyboardButton[]{inlineKeyboardButton1}});
 
             listSendMessages.add(new SendMessage(chatId, sendText).replyMarkup(inlineKeyboardMarkup));
 
@@ -96,7 +96,6 @@ public class AllCommand implements Command {
 
             listSendMessages.add(new SendMessage(chatId, sendText).replyMarkup(inlineKeyboardMarkup));
         }
-
 
         return listSendMessages;
     }
