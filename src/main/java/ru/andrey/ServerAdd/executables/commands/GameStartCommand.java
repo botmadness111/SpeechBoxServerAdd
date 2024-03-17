@@ -89,11 +89,10 @@ public class GameStartCommand implements Command {
             Card card = getCommand.handle(message);
             String text;
             if (response.code() == 200) {
-                text = "Игра началась!" + "\n"
+                text = "Игра началась" + "\n"
                         + "Для ответа напишите: /ans ответ" + "\n"
-                        + "original: " + "**" + card.getOriginal() + "**"    + "\n"
-                        + "translation: " + "||" + card.getTranslation() + "||" + "\n"
-                        + "**скрытый текст.**";
+                        + "original: " + card.getOriginal() + "\n"
+                        + "translation: " + "||" + card.getTranslation() + "||";
 
             } else {
                 text = "Ошибочка...";

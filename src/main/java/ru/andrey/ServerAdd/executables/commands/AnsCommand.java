@@ -83,13 +83,13 @@ public class AnsCommand implements Command {
 
             String text;
             if (ans) {
-                text = "Верно!" + "\n";
+                text = "Верно" + "\n";
 
                 if (card == null) {
                     text += "Игра окончена";
                 } else {
                     text += "original: " + card.getOriginal() + "\n"
-                            + "translation: " + "|| " + card.getTranslation() + " ||";
+                            + "translation: " + "||" + card.getTranslation() + "||";
                 }
 
             } else {
