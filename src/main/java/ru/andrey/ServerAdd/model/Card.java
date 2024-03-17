@@ -1,5 +1,6 @@
 package ru.andrey.ServerAdd.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -26,7 +27,9 @@ public class Card {
     @Column(name = "translation")
     @Size(min = 1, max = 30, message = "⚠\uFE0Ftranslation should be between 1 and 30")
     private String translation;
+
     @Column(name = "category")
+    @JsonIgnore
     private String category;
 
     @ManyToOne
@@ -51,6 +54,7 @@ public class Card {
         this.user = user;
     }
 
+    @JsonIgnore
     public String getNameCategory() {
         if (category == null) return "не указана";
         return category;

@@ -7,8 +7,8 @@ import ru.andrey.ServerAdd.executables.utils.OriginalAndTranslation;
 @Configuration
 public class ExecutableConfiguration {
 
-    @Bean
-    public OriginalAndTranslation originalAndTranslation() {
-        return new OriginalAndTranslation();
-    }
+//    @Bean
+//    public OriginalAndTranslation originalAndTranslation() {
+//        return new OriginalAndTranslation();
+//    }
 }
