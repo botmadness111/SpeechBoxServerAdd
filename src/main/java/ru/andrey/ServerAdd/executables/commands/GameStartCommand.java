@@ -99,7 +99,7 @@ public class GameStartCommand implements Command {
             }
 
 
-            return Collections.singletonList(new SendMessage(message.chat().id(), text));
+            return Collections.singletonList(new SendMessage(message.chat().id(), text).parseMode(ParseMode.MarkdownV2));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

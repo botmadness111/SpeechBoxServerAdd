@@ -71,9 +71,7 @@ public class SpeechBoxTelegramBot implements Bot {
                 }
 
                 for (SendMessage sendMessage : listSendMessage) {
-                    sendMessage.parseMode(ParseMode.MarkdownV2);
                     bot.execute(sendMessage);
-                    System.out.println(123);
                 }
 
             } catch (NullPointerException e) {

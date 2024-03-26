@@ -40,7 +40,7 @@ public class SetCategoryCallback implements CallBack {
         User user = userService.findByTelegramId(chatId.toString()).get();
         userService.setSelectedCardId(user, cardId);
 
-        String sendText = "Введите /category <название категории>";
+        String sendText = "Введите /category название категории";
         return Collections.singletonList(new SendMessage(chatId, sendText));
     }
 

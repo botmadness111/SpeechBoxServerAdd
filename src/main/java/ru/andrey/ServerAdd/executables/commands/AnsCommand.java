@@ -2,6 +2,7 @@ package ru.andrey.ServerAdd.executables.commands;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -93,10 +94,10 @@ public class AnsCommand implements Command {
                 }
 
             } else {
-                text = "Неверно!";
+                text = "Неверно";
             }
 
-            return Collections.singletonList(new SendMessage(chatId.toString(), text));
+            return Collections.singletonList(new SendMessage(chatId.toString(), text).parseMode(ParseMode.MarkdownV2));
         } catch (IOException e) {
 //            throw new RuntimeException(e);
             return null;

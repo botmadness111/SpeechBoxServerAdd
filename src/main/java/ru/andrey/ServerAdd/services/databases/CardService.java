@@ -58,10 +58,6 @@ public class CardService {
         else return Optional.of(cards.get(0));
     }
 
-    public List<Card> findAll(User user) {
-        return cardRepository.findAllByUser(user);
-    }
-
     public List<Card> findByIdGreaterThan(Integer value, int userId) {
         return cardRepository.findByIdGreaterThanAndUser(value, userId);
     }

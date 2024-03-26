@@ -27,9 +27,9 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
 
     Integer countCardByIdLessThanAndUser(int id, User user);
 
-    Optional<Card> findByIdAndUser(int id, User user);
-
-    List<Card> findAllByUser(User user);
+//    Optional<Card> findByIdAndUser(int id, User user);
+//
+//    List<Card> findAllByUser(User user);
 
 
 }

@@ -21,9 +21,9 @@ public class UserService {
         this.cardService = cardService;
     }
 
-    public Optional<User> findById(int id) {
-        return userRepository.findById(id);
-    }
+//    public Optional<User> findById(int id) {
+//        return userRepository.findById(id);
+//    }
 
     @Transactional
     public User save(User user) {
@@ -34,14 +34,14 @@ public class UserService {
         return userRepository.findByTelegramId(tg_id);
     }
 
-    public User findByIdWithCards(Integer userId) {
-        User userFind = userRepository.findById(userId).get();
-
-        Hibernate.initialize(userFind.getCards());
-
-        return userFind;
-
-    }
+//    public User findByIdWithCards(Integer userId) {
+//        User userFind = userRepository.findById(userId).get();
+//
+//        Hibernate.initialize(userFind.getCards());
+//
+//        return userFind;
+//
+//    }
 
     public User findByTelegramIdWithCards(String tg_id) {
         User userFind = userRepository.findByTelegramId(tg_id).get();

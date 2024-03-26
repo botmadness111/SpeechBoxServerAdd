@@ -70,7 +70,7 @@ public class SetCategoryCommand implements Command {
         cardService.setCategory(card, category);
 
 
-        return Collections.singletonList(new SendMessage(chatId, "\uD83D\uDE42\u200D↔\uFE0F Успех!"));
+        return Collections.singletonList(new SendMessage(chatId, "\uD83D\uDE42\u200D↔\uFE0F Успех"));
 
     }
 
