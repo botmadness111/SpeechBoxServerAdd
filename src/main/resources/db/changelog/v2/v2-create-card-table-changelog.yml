@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: v2-1
+      author: Andrey
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            tableExists:
+              tableName: loan
+      changes:
+        - createTable:
+            tableName: card
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                  autoIncrement: true
+              - column:
+                  name: original
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: translation
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: varchar(30)
+                  constraints:
+                    unique: true
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: user_id
+                    referencedTableName: tg_user
+                    referencedColumnNames: id
+                    deleteCascade: false

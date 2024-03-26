@@ -19,6 +19,7 @@ import ru.andrey.ServerAdd.executables.commands.Command;
 import ru.andrey.ServerAdd.configuration.Bot;
 
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -79,6 +80,10 @@ public class SpeechBoxTelegramBot implements Bot {
                 continue;
             } catch (CardErrorException e) {
                 bot.execute(new SendMessage(e.getChatId(), e.getMessage()));
+            }
+            catch (RuntimeException e){
+                System.out.println("Error");
+                System.out.println(e.getMessage());
             }
 
             return UpdatesListener.CONFIRMED_UPDATES_ALL;

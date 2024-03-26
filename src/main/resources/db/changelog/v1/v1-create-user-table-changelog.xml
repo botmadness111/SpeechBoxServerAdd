@@ -1,0 +1,50 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="v1-1" author="Andrey">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="tg_user"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="tg_user">
+            <column name="id" type="int">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tg_id" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="stopid" type="int" defaultValue="0">
+                <constraints/>
+            </column>
+            <column name="selectedcardid" type="int" defaultValue="null">
+                <constraints/>
+            </column>
+        </createTable>
+
+        <addAutoIncrement tableName="tg_user" columnName="id"
+                          columnDataType="int"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+        />
+
+    </changeSet>
+
+    <changeSet id="v1-2" author="Andrey">
+
+        <preConditions onFail="MARK_RAN">
+            <tableIsEmpty tableName="tg_user"/>
+        </preConditions>
+
+        <loadData tableName="tg_user" file="db/data/user_tg-data.csv"/>
+    </changeSet>
+
+</databaseChangeLog>
