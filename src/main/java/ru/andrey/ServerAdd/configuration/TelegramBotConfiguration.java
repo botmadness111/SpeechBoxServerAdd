@@ -1,15 +1,13 @@
 package ru.andrey.ServerAdd.configuration;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.request.KeyboardButton;
-import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import redis.clients.jedis.Jedis;
 
 @Configuration
 public class TelegramBotConfiguration {
@@ -25,4 +23,13 @@ public class TelegramBotConfiguration {
         return new TelegramBot(speechBoxTelegramBotSettings.getToken());
     }
 
+    @Bean
+    public ExecutorService executorService(){
+        return Executors.newFixedThreadPool(1000);
+    }
+
+    @Bean
+    public Jedis jedis() {
+        return new Jedis("localhost", 6379);
+    }
 }

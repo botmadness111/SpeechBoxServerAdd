@@ -6,7 +6,7 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             tableExists:
-              tableName: loan
+              tableName: card
       changes:
         - createTable:
             tableName: card
