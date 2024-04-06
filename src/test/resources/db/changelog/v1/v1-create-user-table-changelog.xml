@@ -9,6 +9,7 @@
             <not>
                 <tableExists tableName="tg_user"/>
             </not>
+
         </preConditions>
 
         <createTable tableName="tg_user">
@@ -44,7 +45,7 @@
             <tableIsEmpty tableName="tg_user"/>
         </preConditions>
 
-        <loadData tableName="tg_user" file="db/data/user_tg-data.csv"/>
+        <loadData tableName="tg_user" file="db/data/user_tg-data-test.csv"/>
     </changeSet>
 
 </databaseChangeLog>

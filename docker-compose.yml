@@ -1,3 +1,8 @@
+volumes:
+  db_data:
+  db_data_test:
+  redis_data:
+
 services:
   app:
     build:
@@ -19,13 +24,21 @@ services:
       - "6543:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+
+  db_pg_16_test:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: speechBox_postgres_test
+      POSTGRES_USER: speechBox_postgres_test
+      POSTGRES_PASSWORD: speechBox_postgres_test
+    ports:
+      - "6544:5432"
+    volumes:
+      - db_data_test:/var/lib/postgresql/data_test
+
   redis:
     image: redis
     ports:
       - "6378:6379"
     volumes:
       - redis_data:/var/lib/redis/data
-
-volumes:
-  db_data:
-  redis_data:
