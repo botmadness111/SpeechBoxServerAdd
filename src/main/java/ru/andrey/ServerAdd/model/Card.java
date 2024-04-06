@@ -10,6 +10,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -58,5 +59,18 @@ public class Card {
     public String getNameCategory() {
         if (category == null) return "не указана";
         return category;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Card card = (Card) object;
+        return Objects.equals(id, card.id) && Objects.equals(original, card.original) && Objects.equals(translation, card.translation) && Objects.equals(category, card.category) && Objects.equals(user, card.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, original, translation, category, user);
     }
 }

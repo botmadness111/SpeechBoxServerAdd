@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -41,5 +42,21 @@ public class User {
 
     public void addCard(Card card) {
         cards.add(card);
+    }
+    public void removeCard(Card card){
+        cards.remove(card);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        User user = (User) object;
+        return Objects.equals(id, user.id) && Objects.equals(telegramId, user.telegramId) && Objects.equals(username, user.username) && Objects.equals(stopId, user.stopId) && Objects.equals(selectedCardId, user.selectedCardId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, telegramId, username, stopId, selectedCardId, cards);
     }
 }
