@@ -45,7 +45,6 @@ public class SpeechBoxTelegramBot implements Bot {
     @Override
     public void start() {
         bot.setUpdatesListener(this);
-
     }
 
     @Override
@@ -61,7 +60,6 @@ public class SpeechBoxTelegramBot implements Bot {
                 @Override
                 public void run() {
                     try {
-//                        log.info();
                         Command command = null;
                         CallBack callback = null;
                         if (update.message() != null)

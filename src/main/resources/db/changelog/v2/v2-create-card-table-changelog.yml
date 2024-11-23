@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Andrey
       preConditions:
         - onFail: MARK_RAN
-          not:
+        - not:
             tableExists:
               tableName: card
       changes:
@@ -41,14 +41,3 @@ databaseChangeLog:
                     referencedTableName: tg_user
                     referencedColumnNames: id
                     deleteCascade: false
-  - changeSet:
-      id: v2-2
-      author: Andrey
-      preConditions:
-        - onFail: MARK_RAN
-        - tableIsEmpty:
-            tableName: card
-      changes:
-        - loadData:
-            tableName: card
-            file: db/data/card-data-test.csv
