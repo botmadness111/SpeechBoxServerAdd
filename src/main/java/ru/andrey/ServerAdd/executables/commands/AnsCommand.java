@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 @Component
 public class AnsCommand implements Command {
     private final OkHttpClient client = new OkHttpClient();
-    private final String domain = "http://localhost:8080/game";
+    private final String domain = "http://app2:8080/game";
 
     private final GetCommand getCommand;
 

@@ -31,3 +31,10 @@ services:
       - "6378:6379"
     volumes:
       - redis_data:/var/lib/redis/data
+
+  app2:
+    build:
+      context: ../../gameService/SpeechBoxServerGameManagement
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"

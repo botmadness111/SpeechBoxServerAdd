@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 @Component
 public class GameStartCommand implements Command {
     private final OkHttpClient client = new OkHttpClient();
-    private final String domain = "http://localhost:8080/game";
+    private final String domain = "http://app2:8080/game";
 
     private final GetCommand getCommand;
 
@@ -67,25 +67,6 @@ public class GameStartCommand implements Command {
 
         try (Response response = client.newCall(request).execute()) {
 
-//            String jsonResponse = response.body().string();
-//
-//            JSONArray jsonArray = new JSONArray(jsonResponse);
-
-
-//            List<Card> cardList = new ArrayList<>();
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            for (int i = 0; i < jsonArray.length(); i++) {
-//                try {
-//                    // Преобразование JSON объекта в экземпляр класса Card
-//                    Card card = objectMapper.readValue(jsonArray.getJSONObject(i).toString(), Card.class);
-//
-//                    // Добавление экземпляра Card в список
-//                    cardList.add(card);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
             Card card = getCommand.handle(message);
             String text;
             if (response.code() == 200) {
@@ -101,6 +82,7 @@ public class GameStartCommand implements Command {
 
             return Collections.singletonList(new SendMessage(message.chat().id(), text).parseMode(ParseMode.MarkdownV2));
         } catch (IOException e) {
+            System.out.println(e.getMessage());
             throw new RuntimeException(e);
         }
 

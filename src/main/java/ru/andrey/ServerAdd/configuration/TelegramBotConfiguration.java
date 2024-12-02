@@ -30,6 +30,6 @@ public class TelegramBotConfiguration {
 
     @Bean
     public Jedis jedis() {
-        return new Jedis("localhost", 6379);
+        return new Jedis("redis", 6379);
     }
 }
